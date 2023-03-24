@@ -93,14 +93,18 @@ php artisan migrate
 ## Crear middleware 
 php artisan make:middleware AdminAuth
 
+### Creacion de controladores
+
 ## Create controller AuthController
 php artisan make:controller Admin\AuthContoller    
 
-##Create controller Profile
+## Create controller Profile
 php artisan make:controller Admin\ProfileController
 
 ## Create controller User
 php artisan make:controller Admin\UserController
+
+### Vistas y admin lte
 
 ## admin lte descargar
 https://adminlte.io/
@@ -112,8 +116,8 @@ https://adminlte.io/
 
 ## Carpetas a copiar de Admin lte a proyecto laravel
 
-dist
-plugins
+-dist
+-plugins
 
 
 ## Vistas
