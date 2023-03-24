@@ -67,7 +67,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 composer create-project laravel/laravel planlealtad  8.6  --prefer-dist
 
-##Edit .env
+## Edit .env
 
 ##edit UserTable
 
@@ -93,17 +93,30 @@ php artisan migrate
 ## Crear middleware 
 php artisan make:middleware AdminAuth
 
-##Create controller AuthController
+## Create controller AuthController
 php artisan make:controller Admin\AuthContoller    
 
 ##Create controller Profile
 php artisan make:controller Admin\ProfileController
 
-##Create controller User
+## Create controller User
 php artisan make:controller Admin\UserController
 
+## admin lte descargar
+https://adminlte.io/
 
-##Vistas
+## carpeta para librerias de admin lte
+
+/Public/admin-assets(La carpeta no existe, se puede cambiar el nombre)
+
+
+## Carpetas a copiar de Admin lte a proyecto laravel
+
+dist
+plugins
+
+
+## Vistas
 direccion :
 
 view/admin
@@ -112,10 +125,12 @@ view/admin
 -partials
 -users
 
-##middleware
+Nota: Verificar el enrutamiento de la libreria de admin lte
+
+## middleware
 -AdminAuth
 
-##Routes
+## Routes
 
 Route::get('/admin/login',[AuthContoller::class,'getLogin'])->name('getLogin');
 
@@ -131,8 +146,8 @@ Route::group(['middleware'=>['admin_auth']],function(){
 
 });
 
-##middleware/Kernel
-##añadir
+## middleware/Kernel
+## añadir
  'admin_auth' => \App\Http\Middleware\AdminAuth::class,
        
 
