@@ -63,7 +63,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-##Install proyect laravel 8.6
+## Install proyect laravel 8.6
 
 composer create-project laravel/laravel planlealtad  8.6  --prefer-dist
 
@@ -71,19 +71,19 @@ composer create-project laravel/laravel planlealtad  8.6  --prefer-dist
 
 ## edit UserTable
 
- public function up()
-    {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->boolean('is_admin')->default(false);
-            $table->rememberToken();
-            $table->timestamps();
-        });
-    }
+     public function up()
+        {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                $table->boolean('is_admin')->default(false);
+                $table->rememberToken();
+                $table->timestamps();
+            });
+        }
 
 
 ## migrate data
@@ -132,11 +132,11 @@ Nota: Verificar el enrutamiento de la libreria de admin lte
 
 ## Routes
 
-Route::get('/admin/login',[AuthContoller::class,'getLogin'])->name('getLogin');
+    Route::get('/admin/login',[AuthContoller::class,'getLogin'])->name('getLogin');
 
-Route::post('/admin/login',[AuthContoller::class,'postLogin'])->name('postLogin');
+    Route::post('/admin/login',[AuthContoller::class,'postLogin'])->name('postLogin');
 
-Route::group(['middleware'=>['admin_auth']],function(){
+    Route::group(['middleware'=>['admin_auth']],function(){
     
     Route::get('/admin/dashboard',[ProfileController::class,'dashboard'])->name('dashboard');
 
@@ -144,7 +144,7 @@ Route::group(['middleware'=>['admin_auth']],function(){
 
     Route::get('/admin/logout',[ProfileController::class,'logout'])->name('logout');
 
-});
+    });
 
 ## middleware/Kernel
 ## añadir
