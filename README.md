@@ -69,7 +69,7 @@ composer create-project laravel/laravel planlealtad  8.6  --prefer-dist
 
 ## Edit .env
 
-##edit UserTable
+## edit UserTable
 
  public function up()
     {
