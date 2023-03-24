@@ -62,3 +62,77 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+##Install proyect laravel 8.6
+
+composer create-project laravel/laravel planlealtad  8.6  --prefer-dist
+
+##Edit .env
+
+##edit UserTable
+
+ public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->boolean('is_admin')->default(false);
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+
+## migrate data
+php artisan migrate
+
+
+## Crear middleware 
+php artisan make:middleware AdminAuth
+
+##Create controller AuthController
+php artisan make:controller Admin\AuthContoller    
+
+##Create controller Profile
+php artisan make:controller Admin\ProfileController
+
+##Create controller User
+php artisan make:controller Admin\UserController
+
+
+##Vistas
+direccion :
+
+view/admin
+
+-auth
+-partials
+-users
+
+##middleware
+-AdminAuth
+
+##Routes
+
+Route::get('/admin/login',[AuthContoller::class,'getLogin'])->name('getLogin');
+
+Route::post('/admin/login',[AuthContoller::class,'postLogin'])->name('postLogin');
+
+Route::group(['middleware'=>['admin_auth']],function(){
+    
+    Route::get('/admin/dashboard',[ProfileController::class,'dashboard'])->name('dashboard');
+
+    Route::get('/admin/users',[UserController::class,'index'])->name('users.index');
+
+    Route::get('/admin/logout',[ProfileController::class,'logout'])->name('logout');
+
+});
+
+##middleware/Kernel
+##añadir
+ 'admin_auth' => \App\Http\Middleware\AdminAuth::class,
+       
+
