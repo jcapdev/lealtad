@@ -189,139 +189,139 @@ php artisan make:controller CustomerController --resource --model=Customer
 ## CODE
 
 
-<?php
+    <?php
 
-namespace App\Http\Controllers;
+    namespace App\Http\Controllers;
 
-//use App\Http\Controllers\Controller;
-use App\Models\Customer;
-use Illuminate\Http\Request;
+    //use App\Http\Controllers\Controller;
+    use App\Models\Customer;
+    use Illuminate\Http\Request;
 
-class CustomerController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    class CustomerController extends Controller
     {
-        $customers = Customer::latest()->paginate(5);
+        /**
+         * Display a listing of the resource.
+         *
+         * @return \Illuminate\Http\Response
+         */
+        public function index()
+        {
+            $customers = Customer::latest()->paginate(5);
 
-        return view('customers.index',compact('customers'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+            return view('customers.index',compact('customers'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
+
+        /**
+         * Show the form for creating a new resource.
+         *
+         * @return \Illuminate\Http\Response
+         */
+        public function create()
+        {
+            return view('customers.create');
+
+        }
+
+        /**
+         * Store a newly created resource in storage.
+         *
+         * @param  \Illuminate\Http\Request  $request
+         * @return \Illuminate\Http\Response
+         */
+        public function store(Request $request)
+        {
+            $request->validate([
+                'name' => 'required',
+                'detail' => 'required',
+            ]);
+
+            Customer::create($request->all());
+
+            return redirect()->route('customers.index')
+                    ->with('success','Customer created successfully.');
+        }
+
+        /**
+         * Display the specified resource.
+         *
+         * @param  \App\Models\Customer  $customer
+         * @return \Illuminate\Http\Response
+         */
+        public function show(Customer $customer)
+        {
+            return view('customers.show',compact('customer'));
+        }
+
+        /**
+         * Show the form for editing the specified resource.
+         *
+         * @param  \App\Models\Customer  $customer
+         * @return \Illuminate\Http\Response
+         */
+        /*coment prueba*/
+        public function edit(Customer $customer)
+        {
+            return view('customers.edit',compact('customer'));
+
+        }
+
+        /**
+         * Update the specified resource in storage.
+         *
+         * @param  \Illuminate\Http\Request  $request
+         * @param  \App\Models\Customer  $customer
+         * @return \Illuminate\Http\Response
+         */
+        public function update(Request $request, Customer $customers)
+        {
+            $request->validate([
+                'name' => 'required',
+                'detail' => 'required',
+            ]);
+
+            $customers->update($request->all());
+
+            return redirect()->route('customers.index')
+                            ->with('success','Product updated successfully');
+
+
+        }
+
+        /**
+         * Remove the specified resource from storage.
+         *
+         * @param  \App\Models\Customer  $customer
+         * @return \Illuminate\Http\Response
+         */
+        public function destroy(Customer $customers)
+        {
+            $customers->delete();
+            return redirect()->route('customers.index')
+                    ->with('success','Product deleted successfully');
+
+
+        }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('customers.create');
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'detail' => 'required',
-        ]);
-
-        Customer::create($request->all());
-
-        return redirect()->route('customers.index')
-                ->with('success','Customer created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Customer $customer)
-    {
-        return view('customers.show',compact('customer'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    /*coment prueba*/
-    public function edit(Customer $customer)
-    {
-        return view('customers.edit',compact('customer'));
-
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Customer $customers)
-    {
-        $request->validate([
-            'name' => 'required',
-            'detail' => 'required',
-        ]);
-
-        $customers->update($request->all());
-
-        return redirect()->route('customers.index')
-                        ->with('success','Product updated successfully');
-
-
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Customer $customers)
-    {
-        $customers->delete();
-        return redirect()->route('customers.index')
-                ->with('success','Product deleted successfully');
-
-
-    }
-}
 
 
 ## ADD METHODS MODEL CUSTOMER
 
-<?php
+    <?php
 
-namespace App\Models;
+    namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
-{
-    use HasFactory;
-    protected $fillable = [
-        'name', 'detail'
-    ];
+    class Customer extends Model
+    {
+        use HasFactory;
+        protected $fillable = [
+            'name', 'detail'
+        ];
 
-}
+    }
 
 ## MODIFIC ROUTES
 
@@ -348,270 +348,215 @@ class Customer extends Model
 
 ## layout.blade.php
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel de Administrador {{isset($title)?'|'.$title:''}} </title>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Panel de Administrador {{isset($title)?'|'.$title:''}} </title>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{asset('admin-assets/plugins/fontawesome-free/css/all.min.css')}}">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css')}}">
-  <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="{{asset('admin-assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{{asset('admin-assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="{{asset('admin-assets/plugins/jqvmap/jqvmap.min.css')}}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('admin-assets/dist/css/adminlte.min.css')}}">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{asset('admin-assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="{{asset('admin-assets/plugins/daterangepicker/daterangepicker.css')}}">
-  <!-- summernote -->
-  <link rel="stylesheet" href="{{asset('admin-assets/plugins/summernote/summernote-bs4.min.css')}}">
-</head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
+      <!-- Google Font: Source Sans Pro -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+      <!-- Font Awesome -->
+      <link rel="stylesheet" href="{{asset('admin-assets/plugins/fontawesome-free/css/all.min.css')}}">
+      <!-- Ionicons -->
+      <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css')}}">
+      <!-- Tempusdominus Bootstrap 4 -->
+      <link rel="stylesheet" href="{{asset('admin-assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+      <!-- iCheck -->
+      <link rel="stylesheet" href="{{asset('admin-assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+      <!-- JQVMap -->
+      <link rel="stylesheet" href="{{asset('admin-assets/plugins/jqvmap/jqvmap.min.css')}}">
+      <!-- Theme style -->
+      <link rel="stylesheet" href="{{asset('admin-assets/dist/css/adminlte.min.css')}}">
+      <!-- overlayScrollbars -->
+      <link rel="stylesheet" href="{{asset('admin-assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
+      <!-- Daterange picker -->
+      <link rel="stylesheet" href="{{asset('admin-assets/plugins/daterangepicker/daterangepicker.css')}}">
+      <!-- summernote -->
+      <link rel="stylesheet" href="{{asset('admin-assets/plugins/summernote/summernote-bs4.min.css')}}">
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
 
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="{{asset('admin-assets/dist/img/AdminLTELogo.png')}}" alt="AdminLTELogo" height="60" width="60">
-  </div>
+      <!-- Preloader -->
+      <div class="preloader flex-column justify-content-center align-items-center">
+        <img class="animation__shake" src="{{asset('admin-assets/dist/img/AdminLTELogo.png')}}" alt="AdminLTELogo" height="60" width="60">
+      </div>
 
-  <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>     
-    </ul>
+      <!-- Navbar -->
+      <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+          </li>     
+        </ul>
 
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-      
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
 
-      <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-user"></i>          
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="{{route('logout')}}" class="dropdown-item">
-           Logout
-          </a>
+
+          <!-- Messages Dropdown Menu -->
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+              <i class="far fa-user"></i>          
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+              <a href="{{route('logout')}}" class="dropdown-item">
+               Logout
+              </a>
+            </div>
+          </li>   
+
+        </ul>
+      </nav>
+      <!-- /.navbar -->
+
+     @include('admin.partials.left-sidebar')
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        @yield('content')   
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid">
+           @yield('body')       
+
+          </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+      <footer class="main-footer">
+        <strong>Copyright &copy; 2014-2021 <a href="#">Panel de Administrador</a>.</strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+          <b>Version</b> 3.1.0
         </div>
-      </li>   
+      </footer>
 
-    </ul>
-  </nav>
-  <!-- /.navbar -->
-
- @include('admin.partials.left-sidebar')
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    @yield('content')   
-    <!-- /.content-header -->
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-       @yield('body')       
-      
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="#">Panel de Administrador</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.1.0
+      <!-- Control Sidebar -->
+      <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+      </aside>
+      <!-- /.control-sidebar -->
     </div>
-  </footer>
+    <!-- ./wrapper -->
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
-</div>
-<!-- ./wrapper -->
-
-<!-- jQuery -->
-<script src="{{asset('admin-assets/plugins/jquery/jquery.min.js')}}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="{{asset('admin-assets/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-</script>
-<!-- Bootstrap 4 -->
-<script src="{{asset('admin-assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<!-- ChartJS -->
-<script src="{{asset('admin-assets/plugins/chart.js/Chart.min.js')}}"></script>
-<!-- Sparkline -->
-<script src="{{asset('admin-assets/plugins/sparklines/sparkline.js')}}"></script>
-<!-- JQVMap -->
-<script src="{{asset('admin-assets/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
-<script src="{{asset('admin-assets/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{asset('admin-assets/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('admin-assets/plugins/moment/moment.min.js')}}"></script>
-<script src="{{asset('admin-assets/plugins/daterangepicker/daterangepicker.js')}}"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{asset('admin-assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-<!-- Summernote -->
-<script src="{{asset('admin-assets/plugins/summernote/summernote-bs4.min.js')}}"></script>
-<!-- overlayScrollbars -->
-<script src="{{asset('admin-assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
-<!-- AdminLTE App -->
-<script src="{{asset('admin-assets/dist/js/adminlte.js')}}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{asset('admin-assets/dist/js/demo.js')}}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{asset('admin-assets/dist/js/pages/dashboard.js')}}"></script>
-</body>
-</html>
+    <!-- jQuery -->
+    <script src="{{asset('admin-assets/plugins/jquery/jquery.min.js')}}"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{asset('admin-assets/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+      $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="{{asset('admin-assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <!-- ChartJS -->
+    <script src="{{asset('admin-assets/plugins/chart.js/Chart.min.js')}}"></script>
+    <!-- Sparkline -->
+    <script src="{{asset('admin-assets/plugins/sparklines/sparkline.js')}}"></script>
+    <!-- JQVMap -->
+    <script src="{{asset('admin-assets/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
+    <script src="{{asset('admin-assets/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="{{asset('admin-assets/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
+    <!-- daterangepicker -->
+    <script src="{{asset('admin-assets/plugins/moment/moment.min.js')}}"></script>
+    <script src="{{asset('admin-assets/plugins/daterangepicker/daterangepicker.js')}}"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="{{asset('admin-assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <!-- Summernote -->
+    <script src="{{asset('admin-assets/plugins/summernote/summernote-bs4.min.js')}}"></script>
+    <!-- overlayScrollbars -->
+    <script src="{{asset('admin-assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{asset('admin-assets/dist/js/adminlte.js')}}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{{asset('admin-assets/dist/js/demo.js')}}"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="{{asset('admin-assets/dist/js/pages/dashboard.js')}}"></script>
+    </body>
+    </html>
 
 
 
 ## ADD VIEW index.blade.php
 
-@extends('customers.layout')
- 
-@section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Clientes Plan Lealtad</h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('customers.create') }}"> Create New Customer</a>
+    @extends('customers.layout')
+
+    @section('content')
+        <div class="row">
+            <div class="col-lg-12 margin-tb">
+                <div class="pull-left">
+                    <h2>Clientes Plan Lealtad</h2>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-success" href="{{ route('customers.create') }}"> Create New Customer</a>
+                </div>
             </div>
         </div>
-    </div>
-   
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
-    @endif
-   
-    <table class="table table-bordered">
-        <tr>
-            <th>No</th>
-            <th>Name</th>
-            <th>Details</th>
-            <th width="280px">Action</th>
-        </tr>
-        @foreach ($customers as $customer)
-        <tr>
-            <td>{{ ++$i }}</td>
-            <td>{{ $customer->name }}</td>
-            <td>{{ $customer->detail }}</td>
-            <td>
-                <form action="{{ route('customers.destroy',$customer->id) }}" method="POST">
-   
-                    <a class="btn btn-info" href="{{ route('customers.show',$customer->id) }}">Show</a>
-    
-                    <a class="btn btn-primary" href="{{ route('customers.edit',$customer->id) }}">Edit</a>
-   
-                    @csrf
-                    @method('DELETE')
-      
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
-    </table>
-  
-    {!! $customers->links() !!}
-      
-@endsection
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <p>{{ $message }}</p>
+            </div>
+        @endif
+
+        <table class="table table-bordered">
+            <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Details</th>
+                <th width="280px">Action</th>
+            </tr>
+            @foreach ($customers as $customer)
+            <tr>
+                <td>{{ ++$i }}</td>
+                <td>{{ $customer->name }}</td>
+                <td>{{ $customer->detail }}</td>
+                <td>
+                    <form action="{{ route('customers.destroy',$customer->id) }}" method="POST">
+
+                        <a class="btn btn-info" href="{{ route('customers.show',$customer->id) }}">Show</a>
+
+                        <a class="btn btn-primary" href="{{ route('customers.edit',$customer->id) }}">Edit</a>
+
+                        @csrf
+                        @method('DELETE')
+
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        </table>
+
+        {!! $customers->links() !!}
+
+    @endsection
 
 
 ##ADD  create.blade.php
 
-@extends('customers.layout')
-  
-@section('content')
-<div class="row">
-    <div class="col-lg-12 margin-tb">
-        <div class="pull-left">
-            <h2>Add New Customer</h2>
-        </div>
-        <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('customers.index') }}"> Back</a>
-        </div>
-    </div>
-</div>
-   
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-   
-<form action="{{ route('customers.store') }}" method="POST">
-    @csrf
-  
-     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Name:</strong>
-                <input type="text" name="name" class="form-control" placeholder="Name">
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Detail:</strong>
-                <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail"></textarea>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </div>
-   
-</form>
-@endsection
+    @extends('customers.layout')
 
-
-
-## ADD edit.blade.php
-
-<!-- sda -->
-
-@extends('customers.layout')
-   
-@section('content')
+    @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Edit Product</h2>
+                <h2>Add New Customer</h2>
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('customers.index') }}"> Back</a>
             </div>
         </div>
     </div>
-   
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -622,64 +567,119 @@ class Customer extends Model
             </ul>
         </div>
     @endif
-  
-    <form action="{{ route('customers.update',$customer->id) }}" method="POST">
+
+    <form action="{{ route('customers.store') }}" method="POST">
         @csrf
-        @method('PUT')
-   
+
          <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Name:</strong>
-                    <input type="text" name="name" value="{{ $customer->name }}" class="form-control" placeholder="Name">
+                    <input type="text" name="name" class="form-control" placeholder="Name">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Detail:</strong>
-                    <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail">{{ $customer->detail }}</textarea>
+                    <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail"></textarea>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-              <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>
-   
+
     </form>
-@endsection
+    @endsection
+
+
+
+## ADD edit.blade.php
+
+    <!-- sda -->
+
+    @extends('customers.layout')
+
+    @section('content')
+        <div class="row">
+            <div class="col-lg-12 margin-tb">
+                <div class="pull-left">
+                    <h2>Edit Product</h2>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-primary" href="{{ route('customers.index') }}"> Back</a>
+                </div>
+            </div>
+        </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('customers.update',$customer->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+             <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Name:</strong>
+                        <input type="text" name="name" value="{{ $customer->name }}" class="form-control" placeholder="Name">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Detail:</strong>
+                        <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail">{{ $customer->detail }}</textarea>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+
+        </form>
+    @endsection
 
 
 ## ADD show.blade.php
 
-@extends('customers.layout')
+    @extends('customers.layout')
 
-@section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2> Show Customer</h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('customers.index') }}"> Back</a>
-            </div>
-        </div>
-    </div>
-   
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Name:</strong>
-                <strong> {{ $customer->name }}</strong>               
+    @section('content')
+        <div class="row">
+            <div class="col-lg-12 margin-tb">
+                <div class="pull-left">
+                    <h2> Show Customer</h2>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-primary" href="{{ route('customers.index') }}"> Back</a>
+                </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Details:</strong>
-                {{ $customer->detail }}
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Name:</strong>
+                    <strong> {{ $customer->name }}</strong>               
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Details:</strong>
+                    {{ $customer->detail }}
+                </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
 
 
 
