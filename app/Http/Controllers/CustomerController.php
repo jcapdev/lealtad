@@ -68,6 +68,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
+    /*coment prueba*/
     public function edit(Customer $customer)
     {
         return view('customers.edit',compact('customer'));
