@@ -34,12 +34,12 @@ Route::group(['middleware'=>['admin_auth']],function(){
     Route::get('/admin/users',[UserController::class,'index'])->name('users.index');
 
     Route::get('/admin/logout',[ProfileController::class,'logout'])->name('logout');
-/*
+
     Route::get('/admin/customer', [CustomerController::class,'index'])->name('index');
     Route::get('/admin/customer/create', [CustomerController::class,'create'])->name('create');
     Route::get('/admin/customer/destroy', [CustomerController::class,'destroy'])->name('destroy');
     Route::get('/admin/customer/show', [CustomerController::class,'show'])->name('show');
-    Route::get('/admin/customer/edit', [CustomerController::class,'edit'])->name('edit');*/
+    Route::get('/admin/customer/edit', [CustomerController::class,'edit'])->name('edit');
 
     
 });
